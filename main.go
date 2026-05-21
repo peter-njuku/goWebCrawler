@@ -145,8 +145,10 @@ func main() {
 	cfg.wg.Add(1)
 	go cfg.crawlPage(rawBaseURL)
 	cfg.wg.Wait()
-	for normalizedURL := range cfg.pages {
-		fmt.Printf("Found: %s\n", normalizedURL)
+	err = writeJSONReport(cfg.pages, "report.json") // 👈 Note: you need a field pageData in config
+	if err != nil {
+		fmt.Printf("Error writing JSON report: %v\n", err)
+		os.Exit(1)
 	}
-	
+	fmt.Println("Report written to report.json")
 }
